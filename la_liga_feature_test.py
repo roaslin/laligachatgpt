@@ -12,6 +12,14 @@ from scrapper import Scrapper
 
 class LaLigaFeature(TestCase):
 
+    def setUp(self):
+        if os.path.exists("la_liga_standing_data.txt"):
+            os.remove("la_liga_standing_data.txt")
+
+    def tearDown(self):
+        if os.path.exists("la_liga_standing_data.txt"):
+            os.remove("la_liga_standing_data.txt")
+
     def test_chatGPT_answers_two_questions_about_LaLiga(self):
         console = mock(Console)
         scrapper = mock(Scrapper)
