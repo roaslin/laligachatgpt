@@ -2,18 +2,22 @@ import os
 import unittest
 from unittest import TestCase
 
-from mockito import inorder, mock
+from mockito import inorder, mock, when
 
 import Console
 from ChatgptService import ChatgptService
 from ScrappingService import ScrappingService
+from scrapper import Scrapper
 
 
 class LaLigaFeature(TestCase):
 
     def test_chatGPT_answers_two_questions_about_LaLiga(self):
         console = mock(Console)
-        scrapping_service = ScrappingService()
+        scrapper = mock(Scrapper)
+        when(scrapper).scrap('https://www.laliga.com/en-GB/laliga-easports/standing').thenReturn(
+            'dummy scrapped data with all data from standing')
+        scrapping_service = ScrappingService(scrapper)
 
         scrapping_service.scrap('https://www.laliga.com/en-GB/laliga-easports/standing', 'la_liga_standing_data.txt')
 

@@ -21,9 +21,7 @@ class ScrappingServiceTest(TestCase):
     def test_saves_scrapped_data_to_file(self):
         scrapper = Scrapper()
         when(scrapper).scrap('https://www.laliga.com/en-GB/laliga-easports/standing').thenReturn(
-            'Based on the provided information from the current standings of La Liga EA Sports, '
-            'the current'
-            ' leader is Real Madrid with 15 points.')
+            'dummy scrapped data')
         scrapping_service = ScrappingService(scrapper)
 
         scrapping_service.scrap('https://www.laliga.com/en-GB/laliga-easports/standing', 'la_liga_standing_data.txt')
@@ -35,10 +33,7 @@ class ScrappingServiceTest(TestCase):
         print(result)
         file.close()
 
-        self.assertEqual(result,
-                         'Based on the provided information from the current standings of La Liga EA Sports, '
-                         'the current'
-                         ' leader is Real Madrid with 15 points.')
+        self.assertEqual(result, 'dummy scrapped data')
 
 
 if __name__ == '__main__':
