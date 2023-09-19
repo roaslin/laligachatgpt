@@ -1,31 +1,15 @@
-import os
 import unittest
 from unittest import TestCase
 
-from mockito import when
-
-from ScrappingService import ScrappingService
-from scrapper import Scrapper
+from ChatgptService import ChatgptService
 
 
 class ChatGPTServiceTest(TestCase):
 
-    def test_creates_a_file_with_chatgpt_response(self):
-        scrapper = Scrapper()
-        when(scrapper).scrap('https://www.laliga.com/en-GB/laliga-easports/standing').thenReturn(
-            'dummy scrapped data')
-        scrapping_service = ScrappingService(scrapper)
+    def test_throw_exception_when_data_file_does_not_exist(self):
+        chat_gpt_service = ChatgptService('file_does_not_exist.txt')
 
-        scrapping_service.scrap('https://www.laliga.com/en-GB/laliga-easports/standing', 'la_liga_standing_data.txt')
-        self.assertTrue(os.path.isfile('la_liga_standing_data.txt'))
-
-        file = open('la_liga_standing_data.txt', 'r')
-        result = file.read()
-        print('RESULT')
-        print(result)
-        file.close()
-
-        self.assertEqual(result, 'dummy scrapped data')
+        self.assertRaises(FileNotFoundError, chat_gpt_service.ask, 'My question that')
 
 
 if __name__ == '__main__':

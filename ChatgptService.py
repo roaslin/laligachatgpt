@@ -1,16 +1,6 @@
-import openai
-
-
 class ChatgptService:
-    def __init__(self):
-        self.data = []
+    def __init__(self, data_filename):
+        self.data_filename = data_filename
 
     def ask(self, question):
-        openai.api_key = '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'
-
-        response = openai.Completion.create(
-            model="gpt-3.5-turbo-instruct",
-            prompt="Write a tagline for an ice cream shop."
-        )
-
-        print(response['choices'][0]['message']['content'])
+        file = open(self.data_filename, 'r')

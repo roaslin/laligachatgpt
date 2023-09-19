@@ -32,7 +32,7 @@ class LaLigaFeature(TestCase):
 
         self.assertTrue(os.path.isfile('./la_liga_standing_data.txt'))
 
-        chatgpt_service = ChatgptService()
+        chatgpt_service = ChatgptService('la_liga_standing_data.txt')
         chatgpt_service.ask('Who is the current leader of La Liga EA Sports?')
 
         inorder.verify(
