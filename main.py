@@ -1,5 +1,5 @@
 # This is a sample Python script.
-from ScrappingService import ScrappingService
+
 from scrapper import Scrapper
 
 
@@ -9,11 +9,46 @@ from scrapper import Scrapper
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+    # print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
     scrapper = Scrapper()
-    scrapper_service = ScrappingService(scrapper)
+    # scrapper_service = ScrappingService(scrapper)
+    #
+    # scrapper_service.scrap('https://www.laliga.com/en-GB/laliga-easports/standing', 'test.txt')
 
-    scrapper_service.scrap('https://www.laliga.com/en-GB/laliga-easports/standing', 'test.txt')
+    # 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
+
+    # service = ChatgptService()
+    # service.ask("This is not working")
+
+    # file = open('test.txt', 'r')
+    #
+    # laliga_data = file.read()
+    # print(laliga_data)
+    # open_ai_api_key = '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'
+    # headers = {"Content-Type": "application/json",
+    #            "Authorization": "Bearer " + open_ai_api_key}
+    # data = {
+    #     "model": "gpt-3.5-turbo",
+    #     "messages": [
+    #         {
+    #             "role": "system",
+    #             "content": "You are a helpful assistant."
+    #         },
+    #         {
+    #             "role": "user",
+    #             "content": "".join(laliga_data)
+    #         },
+    #         {
+    #             "role": "user",
+    #             "content": "Who is the current leader of La Liga EA Sports?"
+    #         }
+    #     ]
+    #
+    # }
+    # request = requests.post('https://api.openai.com/v1/chat/completions', json=data, headers=headers)
+    #
+    # responsejson = request.json()
+    # print(responsejson['choices'][0]['message']['content'])
 
 
 # Press the green button in the gutter to run the script.
