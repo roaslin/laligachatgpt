@@ -1,7 +1,6 @@
 import openai
 
 
-# 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
 class ChatgptService:
     def __init__(self):
         self.data = []
