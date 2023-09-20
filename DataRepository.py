@@ -3,9 +3,14 @@ class DataRepository:
         pass
 
     def read(self, file_name):
-        raise NotImplementedError
+        file = open(file_name, 'r')
+        data = file.read()
+        file.close()
+
+        return data
 
     def store(self, file_name, data):
         file = open(file_name, 'a')
+        file.write(data)
 
         file.close()

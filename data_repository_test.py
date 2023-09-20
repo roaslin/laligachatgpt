@@ -21,6 +21,15 @@ class DataRepositoryTest(TestCase):
 
         self.assertTrue(os.path.isfile('./file_name.txt'))
 
+    def test_appends_data_in_file(self):
+        dataRepository = DataRepository()
+        dataRepository.store('file_name.txt', 'First data\n')
+        dataRepository.store('file_name.txt', 'Second data\n')
+
+        result = dataRepository.read('file_name.txt')
+
+        self.assertEqual('First data\nSecond data\n', result)
+
 
 if __name__ == '__main__':
     unittest.main()
