@@ -14,14 +14,14 @@ def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     # print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
     scrapper = Scrapper()
-    scrapper_service = ScrappingService(scrapper)
+    scrapper_service = ScrappingService(scrapper, data_repository)
 
-    scrapper_service.scrap('https://www.laliga.com/en-GB/laliga-easports/standing', 'test.txt')
+    scrapper_service.scrap('https://www.laliga.com/en-GB/laliga-easports/standing', 'scrapped_data_from_la_liga_standing.txt')
 
     # service = ChatgptService()
     # service.ask("This is not working")
 
-    file = open('test.txt', 'r')
+    file = open('scrapped_data_from_la_liga_standing.txt', 'r')
 
     laliga_data = file.read()
     # print(laliga_data)

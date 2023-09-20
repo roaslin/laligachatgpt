@@ -34,7 +34,7 @@ class ChatGPTServiceTest(TestCase):
         chat_gpt_chat_client = ChatGPTChatCLient()
         data_repository = DataRepository()
         when(data_repository).read(...).thenRaise(FileNotFoundError)
-        chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME)
+        chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME, console)
 
         result = chat_gpt_service.updateContextWindowWith('filename_does_not_exist.txt')
 
@@ -46,7 +46,7 @@ class ChatGPTServiceTest(TestCase):
         fake_response = self.build_error_response()
         when(data_repository).read('dummy_data.txt').thenReturn('Some dummy data')
         when(chat_gpt_chat_client).send(...).thenReturn(fake_response)
-        chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME)
+        chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME, console)
 
         result = chat_gpt_service.updateContextWindowWith('dummy_data.txt')
 
@@ -58,7 +58,7 @@ class ChatGPTServiceTest(TestCase):
         fake_ok_response = self.build_ok_response()
         when(data_repository).read('dummy_data.txt').thenReturn('Some dummy data')
         when(chat_gpt_chat_client).send(...).thenReturn(fake_ok_response)
-        chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME)
+        chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME, console)
 
         result = chat_gpt_service.updateContextWindowWith('dummy_data.txt')
 
@@ -76,7 +76,7 @@ class ChatGPTServiceTest(TestCase):
         )
         chat_gpt_chat_client = ChatGPTChatCLient()
         data_repository = DataRepository()
-        chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME)
+        chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME, console)
 
         result = chat_gpt_service.ask('What is your favourite color, my friend?')
 
@@ -92,7 +92,7 @@ class ChatGPTServiceTest(TestCase):
         )
         chat_gpt_chat_client = ChatGPTChatCLient()
         data_repository = DataRepository()
-        chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME)
+        chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME, console)
 
         chat_gpt_service.ask('What is your favourite color, my friend?')
 
