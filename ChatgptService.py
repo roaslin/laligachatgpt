@@ -8,7 +8,9 @@ class ChatgptService:
 
     def updateContextWindowWith(self, filename):
         data = self.data_repository.read(filename)
-
         response = self.chat_gpt_client.send(data)
+
         if not response.ok:
             return 'error-updating-context-window'
+        else:
+            return 'context-window-updated'
