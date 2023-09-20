@@ -7,11 +7,11 @@ from mockito import inorder, mock, when
 import ChatGPTChatCLient
 import Console
 from ChatgptService import ChatgptService
+from DataRepository import DataRepository
 from ScrappingService import ScrappingService
 from scrapper import Scrapper
 
 
-# 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
 class LaLigaFeature(TestCase):
 
     def setUp(self):
@@ -25,6 +25,7 @@ class LaLigaFeature(TestCase):
     def test_chatGPT_answers_two_questions_about_LaLiga(self):
         console = mock(Console)
         scrapper = mock(Scrapper)
+        data_repository = DataRepository()
         chat_gpt_chat_client = mock(ChatGPTChatCLient)
         when(scrapper).scrap('https://www.laliga.com/en-GB/laliga-easports/standing').thenReturn(
             'dummy scrapped data with all data from standing')
@@ -37,6 +38,7 @@ class LaLigaFeature(TestCase):
         chatgpt_service = ChatgptService(chat_gpt_chat_client, data_repository)
         chatgpt_service.updateContextWindowWith('./la_liga_standing_data.txt')
         chatgpt_service.ask('Who is the current leader of La Liga EA Sports?')
+
 
         inorder.verify(
             console.printLn(
@@ -55,6 +57,7 @@ class LaLigaFeature(TestCase):
         inorder.verify(console.printLn('Rayo Vallecano: 9 points'))
         inorder.verify(console.printLn('These teams have accumulated more than 6 points in the league.'))
 
+        self.assertTrue(os.path.isfile('./la_liga_standing_response.txt'))
 
 if __name__ == '__main__':
     unittest.main()
