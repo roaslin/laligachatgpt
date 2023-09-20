@@ -2,7 +2,7 @@ import os.path
 import unittest
 from unittest import TestCase
 
-from mockito import when
+from mockito import when, mock
 
 from ScrappingService import ScrappingService
 from scrapper import Scrapper
@@ -19,7 +19,7 @@ class ScrappingServiceTest(TestCase):
             os.remove("la_liga_standing_data.txt")
 
     def test_saves_scrapped_data_to_file(self):
-        scrapper = Scrapper()
+        scrapper = mock(Scrapper)
         when(scrapper).scrap('https://www.laliga.com/en-GB/laliga-easports/standing').thenReturn(
             'dummy scrapped data')
         scrapping_service = ScrappingService(scrapper)
@@ -29,8 +29,6 @@ class ScrappingServiceTest(TestCase):
 
         file = open('la_liga_standing_data.txt', 'r')
         result = file.read()
-        print('RESULT')
-        print(result)
         file.close()
 
         self.assertEqual(result, 'dummy scrapped data')

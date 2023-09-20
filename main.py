@@ -1,5 +1,6 @@
 # This is a sample Python script.
 import requests
+from requests import Response
 
 from ScrappingService import ScrappingService
 from scrapper import Scrapper
@@ -16,8 +17,6 @@ def print_hi(name):
     scrapper_service = ScrappingService(scrapper)
 
     scrapper_service.scrap('https://www.laliga.com/en-GB/laliga-easports/standing', 'test.txt')
-
-
 
     # service = ChatgptService()
     # service.ask("This is not working")
@@ -47,11 +46,18 @@ def print_hi(name):
         ]
 
     }
-    # request = requests.post('https://api.openai.com/v1/chat/completions', json=data, headers=headers)
-    #
-    # responsejson = request.json()
-    #
-    # print(responsejson['choices'][0]['message']['content'])
+    response = Response()
+    Response
+    request = requests.post('https://api.openai.com/v1/chat/completions', json=data, headers=headers)
+
+    responsejson = request.json()
+    if request.ok:
+
+        print('noe errors!')
+        print(responsejson['choices'][0]['message']['content'])
+    else:
+        print('Exist error')
+        print(responsejson['error'])
 
 
 # Press the green button in the gutter to run the script.

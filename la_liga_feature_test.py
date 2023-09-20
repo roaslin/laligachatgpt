@@ -4,6 +4,7 @@ from unittest import TestCase
 
 from mockito import inorder, mock, when
 
+import ChatGPTChatCLient
 import Console
 from ChatgptService import ChatgptService
 from ScrappingService import ScrappingService
@@ -24,6 +25,7 @@ class LaLigaFeature(TestCase):
     def test_chatGPT_answers_two_questions_about_LaLiga(self):
         console = mock(Console)
         scrapper = mock(Scrapper)
+        chat_gpt_chat_client = mock(ChatGPTChatCLient)
         when(scrapper).scrap('https://www.laliga.com/en-GB/laliga-easports/standing').thenReturn(
             'dummy scrapped data with all data from standing')
         scrapping_service = ScrappingService(scrapper)
@@ -32,7 +34,8 @@ class LaLigaFeature(TestCase):
 
         self.assertTrue(os.path.isfile('./la_liga_standing_data.txt'))
 
-        chatgpt_service = ChatgptService('la_liga_standing_data.txt')
+        chatgpt_service = ChatgptService(chat_gpt_chat_client, data_repository)
+        chatgpt_service.updateContextWindowWith('./la_liga_standing_data.txt')
         chatgpt_service.ask('Who is the current leader of La Liga EA Sports?')
 
         inorder.verify(
