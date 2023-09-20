@@ -4,6 +4,7 @@ from unittest import TestCase
 
 from mockito import when, mock
 
+from DataRepository import DataRepository
 from ScrappingService import ScrappingService
 from scrapper import Scrapper
 
@@ -20,16 +21,15 @@ class ScrappingServiceTest(TestCase):
 
     def test_saves_scrapped_data_to_file(self):
         scrapper = mock(Scrapper)
+        data_repository = DataRepository()
         when(scrapper).scrap('https://www.laliga.com/en-GB/laliga-easports/standing').thenReturn(
             'dummy scrapped data')
-        scrapping_service = ScrappingService(scrapper)
+        scrapping_service = ScrappingService(scrapper, data_repository)
 
         scrapping_service.scrap('https://www.laliga.com/en-GB/laliga-easports/standing', 'la_liga_standing_data.txt')
         self.assertTrue(os.path.isfile('la_liga_standing_data.txt'))
 
-        file = open('la_liga_standing_data.txt', 'r')
-        result = file.read()
-        file.close()
+        result = data_repository.read('la_liga_standing_data.txt')
 
         self.assertEqual(result, 'dummy scrapped data')
 
