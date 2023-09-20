@@ -4,29 +4,31 @@ from unittest import TestCase
 
 from DataRepository import DataRepository
 
+FILE_NAME = 'file_name.txt'
+
 
 class DataRepositoryTest(TestCase):
     def setUp(self):
-        if os.path.exists("file_name.txt"):
-            os.remove("file_name.txt")
+        if os.path.exists('%s' % FILE_NAME):
+            os.remove(FILE_NAME)
 
     def tearDown(self):
-        if os.path.exists("file_name.txt"):
-            os.remove("file_name.txt")
+        if os.path.exists('%s' % FILE_NAME):
+            os.remove(FILE_NAME)
 
     def test_creates_file_for_appending_data(self):
-        dataRepository = DataRepository()
+        data_repository = DataRepository()
 
-        dataRepository.store('file_name.txt', 'First data')
+        data_repository.store(FILE_NAME, 'First data')
 
-        self.assertTrue(os.path.isfile('./file_name.txt'))
+        self.assertTrue(os.path.isfile('./%s' % FILE_NAME))
 
     def test_appends_data_in_file(self):
-        dataRepository = DataRepository()
-        dataRepository.store('file_name.txt', 'First data\n')
-        dataRepository.store('file_name.txt', 'Second data\n')
+        data_repository = DataRepository()
+        data_repository.store(FILE_NAME, 'First data\n')
+        data_repository.store(FILE_NAME, 'Second data\n')
 
-        result = dataRepository.read('file_name.txt')
+        result = data_repository.read(FILE_NAME)
 
         self.assertEqual('First data\nSecond data\n', result)
 
