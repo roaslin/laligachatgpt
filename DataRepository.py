@@ -12,5 +12,4 @@ class DataRepository:
     def store(self, file_name, data):
         file = open(file_name, 'a')
         file.write(data)
-
         file.close()
