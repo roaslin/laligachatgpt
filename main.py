@@ -25,7 +25,7 @@ def print_hi(name):
 
     laliga_data = file.read()
     # print(laliga_data)
-    open_ai_api_key = ''
+    open_ai_api_key = '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'
     headers = {"Content-Type": "application/json",
                "Authorization": "Bearer " + open_ai_api_key}
     data = {
@@ -41,7 +41,7 @@ def print_hi(name):
             },
             {
                 "role": "user",
-                "content": "Which teams have more than 6 points?"
+                "content": "Who is the current leader of La Liga EA Sports?"
             }
         ]
 
@@ -51,6 +51,8 @@ def print_hi(name):
     request = requests.post('https://api.openai.com/v1/chat/completions', json=data, headers=headers)
 
     responsejson = request.json()
+    print('Response json')
+    print(responsejson)
     if request.ok:
 
         print('noe errors!')

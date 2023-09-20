@@ -4,7 +4,13 @@ class ChatgptService:
         self.chat_gpt_client = chat_gpt_client
 
     def ask(self, question):
-        pass
+        response = self.chat_gpt_client.send(question)
+        response_json = response.json()
+
+        if response.ok:
+            return response_json['choices'][0]['message']['content']
+        else:
+            return response_json['error']
 
     def updateContextWindowWith(self, filename):
         try:
