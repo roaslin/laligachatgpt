@@ -42,11 +42,14 @@ class ChatGPTServiceTest(TestCase):
 
         self.assertEqual('context-window-updated', result)
 
-    def build_error_response(self):
+    @staticmethod
+    def build_error_response():
         fake_response = Response()
         fake_response.status_code = 400
         return fake_response
-    def build_ok_response(self):
+
+    @staticmethod
+    def build_ok_response():
         fake_response = Response()
         fake_response.status_code = 200
         return fake_response
