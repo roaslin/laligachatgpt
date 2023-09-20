@@ -11,13 +11,15 @@ from DataRepository import DataRepository
 
 class ChatGPTServiceTest(TestCase):
 
-    def test_throw_exception_when_data_file_does_not_exist(self):
+    def test_returns_file_not_found_when_data_file_does_not_exist(self):
         chat_gpt_chat_client = ChatGPTChatCLient()
         data_repository = DataRepository()
+        when(data_repository).read(...).thenRaise(FileNotFoundError)
         chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository)
 
-        self.assertRaises(FileNotFoundError, chat_gpt_service.updateContextWindowWith, 'filename_does_not_exist.txt')
+        result = chat_gpt_service.updateContextWindowWith('filename_does_not_exist.txt')
 
+        self.assertEqual(result, 'file-not-found')
     def test_returns_error_when_can_not_update_chat_gpt(self):
         chat_gpt_chat_client = ChatGPTChatCLient()
         data_repository = DataRepository()

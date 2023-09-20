@@ -7,7 +7,11 @@ class ChatgptService:
         pass
 
     def updateContextWindowWith(self, filename):
-        data = self.data_repository.read(filename)
+        try:
+            data = self.data_repository.read(filename)
+        except FileNotFoundError:
+            return 'file-not-found'
+
         response = self.chat_gpt_client.send(data)
 
         if not response.ok:
