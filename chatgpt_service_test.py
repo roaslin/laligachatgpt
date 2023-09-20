@@ -21,8 +21,7 @@ class ChatGPTServiceTest(TestCase):
     def test_returns_error_when_can_not_update_chat_gpt(self):
         chat_gpt_chat_client = ChatGPTChatCLient()
         data_repository = DataRepository()
-        fake_response = Response()
-        fake_response.status_code = 400
+        fake_response = self.build_error_response()
         when(data_repository).read('dummy_data.txt').thenReturn('Some dummy data')
         when(chat_gpt_chat_client).send(...).thenReturn(fake_response)
         chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository)
@@ -30,6 +29,11 @@ class ChatGPTServiceTest(TestCase):
         result = chat_gpt_service.updateContextWindowWith('dummy_data.txt')
 
         self.assertEqual('error-updating-context-window', result)
+
+    def build_error_response(self):
+        fake_response = Response()
+        fake_response.status_code = 400
+        return fake_response
 
 
 if __name__ == '__main__':
