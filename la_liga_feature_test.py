@@ -58,21 +58,10 @@ class LaLigaFeature(TestCase):
         self.assertTrue(os.path.isfile('./la_liga_standing_data.txt'))
 
         # Asking questions to ChatGPT
-        # Intercept first call with context window data
-        responses.add(
-            responses.POST,
-            'https://api.openai.com/v1/chat/completions',
-            json='Data with content in ./la_liga_standing_data.txt',
-            status=200,
-        )
-
         console = Console()
         mocked_console = spy(console)
-        chatgpt_service = ChatgptService(chat_gpt_chat_client, data_repository, 'chat_gpt_answers.txt', mocked_console)
-
-        # Update context window
-        context_window_update_result = chatgpt_service.update_context_window_with('./la_liga_standing_data.txt')
-        self.assertEqual('context-window-updated', context_window_update_result)
+        chatgpt_service = ChatgptService(chat_gpt_chat_client, data_repository, 'chat_gpt_answers.txt', mocked_console,
+                                         'la_liga_standing_data.txt')
 
         # Intercept first question
         responses.add(

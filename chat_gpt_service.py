@@ -1,14 +1,23 @@
 class ChatgptService:
-    def __init__(self, chat_gpt_client, data_repository, output_filename, console):
+    def __init__(self, chat_gpt_client, data_repository, output_filename, console, context_filename):
         self.chat_gpt_client = chat_gpt_client
         self.data_repository = data_repository
         self.output_filename = output_filename
         self.console = console
+        self.context_filename = context_filename
+        self._context = ''
 
     # Logic for asking a question
     def ask(self, question):
+        # store the context in memory, ideally we should be updating this context
+        if self._context == '':
+            try:
+                self._context = self.data_repository.read(self.context_filename)
+            except FileNotFoundError:
+                return 'context-file-not-found'
+
         # Send question
-        response = self.chat_gpt_client.send(question)
+        response = self.chat_gpt_client.send(question, self._context)
         response_json = response.json()
 
         if response.ok:
@@ -20,17 +29,3 @@ class ChatgptService:
                 self.console.println(line)
         else:
             return response_json['error']
-
-    # Updates context window
-    def update_context_window_with(self, filename):
-        try:
-            data = self.data_repository.read(filename)
-        except FileNotFoundError:
-            return 'file-not-found'
-
-        response = self.chat_gpt_client.send(data)
-
-        if not response.ok:
-            return 'error-updating-context-window'
-        else:
-            return 'context-window-updated'
