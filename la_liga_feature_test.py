@@ -6,13 +6,14 @@ import responses
 from mockito import mock, when, inorder, spy
 from requests import Response
 
-from ChatgptService import ChatgptService
-from Console import Console
-from DataRepository import DataRepository
-from ScrappingService import ScrappingService
-from chat_gpt_chat_client import ChatGPTChatCLient
+from chat_gpt_chat_client import ChatGPTChatClient
+from chat_gpt_service import ChatgptService
+from console import Console
+from data_repository import DataRepository
 from scrapper import Scrapper
+from scrapping_service import ScrappingService
 
+# Real responses from ChatGPT
 FIRST_QUESTION_JSON_RESPONSE = {'id': 'chatcmpl-80rL3miP00BIbi4JVueVU16BYyQkv', 'object': 'chat.completion',
                                 'created': 1695215725,
                                 'model': 'gpt-3.5-turbo-0613', 'choices': [{'index': 0, 'message': {'role': 'assistant',
@@ -44,9 +45,9 @@ class LaLigaFeature(TestCase):
 
     @responses.activate
     def test_chatGPT_answers_two_questions_about_LaLiga(self):
+        # Scrapping LaLiga Standing web page
         scrapper = mock(Scrapper)
-
-        chat_gpt_chat_client = ChatGPTChatCLient()
+        chat_gpt_chat_client = ChatGPTChatClient()
         data_repository = DataRepository()
         when(scrapper).scrap('https://www.laliga.com/en-GB/laliga-easports/standing').thenReturn(
             'dummy scrapped data with all data from standing')
@@ -56,27 +57,37 @@ class LaLigaFeature(TestCase):
 
         self.assertTrue(os.path.isfile('./la_liga_standing_data.txt'))
 
+        # Asking questions to ChatGPT
+        # Intercept first call with context window data
+        responses.add(
+            responses.POST,
+            'https://api.openai.com/v1/chat/completions',
+            json='Data with content in ./la_liga_standing_data.txt',
+            status=200,
+        )
+
+        console = Console()
+        mocked_console = spy(console)
+        chatgpt_service = ChatgptService(chat_gpt_chat_client, data_repository, 'chat_gpt_answers.txt', mocked_console)
+
+        # Update context window
+        context_window_update_result = chatgpt_service.update_context_window_with('./la_liga_standing_data.txt')
+        self.assertEqual('context-window-updated', context_window_update_result)
+
+        # Intercept first question
         responses.add(
             responses.POST,
             'https://api.openai.com/v1/chat/completions',
             json=FIRST_QUESTION_JSON_RESPONSE,
             status=200,
         )
-
-        console = Console()
-        mocked_console = spy(console)
-
-        chatgpt_service = ChatgptService(chat_gpt_chat_client, data_repository, 'chat_gpt_answers.txt', mocked_console)
-
-        context_window_update_result = chatgpt_service.updateContextWindowWith('./la_liga_standing_data.txt')
-        self.assertEqual('context-window-updated', context_window_update_result)
-
         chatgpt_service.ask('Who is the current leader of La Liga EA Sports?')
 
         inorder.verify(
             mocked_console).println(
             'The current leader of La Liga EA Sports is Real Madrid with 15 points.')
 
+        # Intercept second question
         responses.add(
             responses.POST,
             'https://api.openai.com/v1/chat/completions',

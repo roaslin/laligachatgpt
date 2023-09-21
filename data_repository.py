@@ -1,3 +1,5 @@
+# Repository to store chatgpt answers
+# IMHO this should be implementing an interface, so we can have different repo implementations
 class DataRepository:
     def __init__(self):
         pass

@@ -1,10 +1,11 @@
 import requests
 
 
-class ChatGPTChatCLient():
+class ChatGPTChatClient:
     def __init__(self):
         pass
 
+    # Post a text to ChatGPT either question/data to the context window
     def send(self, text):
         open_ai_api_key = ''
         headers = {"Content-Type": "application/json",
@@ -21,4 +22,3 @@ class ChatGPTChatCLient():
         }
 
         return requests.post('https://api.openai.com/v1/chat/completions', json=data, headers=headers)
-

@@ -2,7 +2,7 @@ import os
 import unittest
 from unittest import TestCase
 
-from DataRepository import DataRepository
+from data_repository import DataRepository
 
 FILE_NAME = 'file_name.txt'
 

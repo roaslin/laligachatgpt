@@ -6,9 +6,10 @@ import responses
 from mockito import when
 from requests import Response
 
-from ChatgptService import ChatgptService
-from DataRepository import DataRepository
-from chat_gpt_chat_client import ChatGPTChatCLient
+from console import Console
+from data_repository import DataRepository
+from chat_gpt_chat_client import ChatGPTChatClient
+from chat_gpt_service import ChatgptService
 
 JSON_RESPONSE = {'id': 'chatcmpl-80rL3miP00BIbi4JVueVU16BYyQkv', 'object': 'chat.completion',
                  'created': 1695215725,
@@ -31,57 +32,43 @@ class ChatGPTServiceTest(TestCase):
             os.remove(OUTPUT_FILENAME)
 
     def test_returns_file_not_found_when_data_file_does_not_exist(self):
-        chat_gpt_chat_client = ChatGPTChatCLient()
+        console = Console()
+        chat_gpt_chat_client = ChatGPTChatClient()
         data_repository = DataRepository()
         when(data_repository).read(...).thenRaise(FileNotFoundError)
         chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME, console)
 
-        result = chat_gpt_service.updateContextWindowWith('filename_does_not_exist.txt')
+        result = chat_gpt_service.update_context_window_with('filename_does_not_exist.txt')
 
         self.assertEqual(result, 'file-not-found')
 
     def test_returns_error_when_can_not_update_chat_gpt(self):
-        chat_gpt_chat_client = ChatGPTChatCLient()
+        console = Console()
+        chat_gpt_chat_client = ChatGPTChatClient()
         data_repository = DataRepository()
         fake_response = self.build_error_response()
         when(data_repository).read('dummy_data.txt').thenReturn('Some dummy data')
         when(chat_gpt_chat_client).send(...).thenReturn(fake_response)
         chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME, console)
 
-        result = chat_gpt_service.updateContextWindowWith('dummy_data.txt')
+        result = chat_gpt_service.update_context_window_with('dummy_data.txt')
 
         self.assertEqual('error-updating-context-window', result)
 
     def test_returns_context_window_updated_when_can_update_chat_gpt_with_new_data(self):
-        chat_gpt_chat_client = ChatGPTChatCLient()
+        console = Console()
+        chat_gpt_chat_client = ChatGPTChatClient()
         data_repository = DataRepository()
         fake_ok_response = self.build_ok_response()
         when(data_repository).read('dummy_data.txt').thenReturn('Some dummy data')
         when(chat_gpt_chat_client).send(...).thenReturn(fake_ok_response)
         chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME, console)
 
-        result = chat_gpt_service.updateContextWindowWith('dummy_data.txt')
+        result = chat_gpt_service.update_context_window_with('dummy_data.txt')
 
         self.assertEqual('context-window-updated', result)
 
-    # This test is intercepting the request 'request.post' which looks like more like an integration test but
-    # I couldn't build manually a fake Response object with the json response
-    @responses.activate
-    def test_returns_a_response_when_asking_a_question(self):
-        responses.add(
-            responses.POST,
-            'https://api.openai.com/v1/chat/completions',
-            json=JSON_RESPONSE,
-            status=200,
-        )
-        chat_gpt_chat_client = ChatGPTChatCLient()
-        data_repository = DataRepository()
-        chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME, console)
-
-        result = chat_gpt_service.ask('What is your favourite color, my friend?')
-
-        self.assertEqual('Red', result)
-
+    # I couldn't create a fake Response object, so I had to intercept the call with an external library T_T
     @responses.activate
     def test_stores_a_response_in_a_file_when_asking_a_question(self):
         responses.add(
@@ -90,7 +77,8 @@ class ChatGPTServiceTest(TestCase):
             json=JSON_RESPONSE,
             status=200,
         )
-        chat_gpt_chat_client = ChatGPTChatCLient()
+        console = Console()
+        chat_gpt_chat_client = ChatGPTChatClient()
         data_repository = DataRepository()
         chat_gpt_service = ChatgptService(chat_gpt_chat_client, data_repository, OUTPUT_FILENAME, console)
 

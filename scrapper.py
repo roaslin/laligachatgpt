@@ -6,6 +6,7 @@ class Scrapper:
     def __init__(self):
         self.data = []
 
+    # Scraps any URL and remove all tags
     def scrap(self, url):
         page = requests.get(url)
         soup = BeautifulSoup(page.content, "html.parser")

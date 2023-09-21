@@ -4,8 +4,8 @@ from unittest import TestCase
 
 from mockito import when, mock
 
-from DataRepository import DataRepository
-from ScrappingService import ScrappingService
+from data_repository import DataRepository
+from scrapping_service import ScrappingService
 from scrapper import Scrapper
 
 
