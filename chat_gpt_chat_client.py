@@ -7,7 +7,8 @@ class ChatGPTChatClient:
 
     # Post a text to ChatGPT either question/data to the context window
     def send(self, text, context):
-        open_ai_api_key = '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'
+        # api_key should be stored in the cloid i.e: AWS Secrets manager
+        open_ai_api_key = 'YOUR_KEY_GOES_HERE'
         headers = {"Content-Type": "application/json",
                    "Authorization": "Bearer " + open_ai_api_key}
         data = {
