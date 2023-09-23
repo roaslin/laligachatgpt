@@ -28,4 +28,5 @@ class ChatgptService:
             for line in data.splitlines():
                 self.console.println(line)
         else:
+            self.console.println(f"Error - {response_json['error']}")
             return response_json['error']
